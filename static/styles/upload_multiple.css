@@ -1,0 +1,25 @@
+.form-container {
+    padding: 10px;
+}
+
+.form-control {
+    width: 500px;
+}
+
+.form-label {
+    padding-left: 4px;
+}
+
+input[type=button], input[type=submit] {
+    background-color: #04AA6D;
+    border: none;
+    border-radius: 25px;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+    position: relative;
+    left: 550px;
+    top: -45px;
+  }
