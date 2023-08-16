@@ -25,7 +25,7 @@ TODO: Guide users through getting your code up and running on their own system. 
 # Using the app
 1. Go to the port specified in <client_port>, from a browser which should give be running a UI like this - 
 
-![Home Page](https://dev.azure.com/farrarscientific/Software/_git/CSV_Aggregator?path=/home_page.png "home page")
+![Home Page](home_page.png "home page")
 
 # Contribute
 TODO: Explain how other users and developers can contribute to make your code better. 
