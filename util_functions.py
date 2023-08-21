@@ -22,7 +22,7 @@ def load_and_clean_dataset(filename):
   return drop_columns(df, columns_to_drop)
 
 def aggregated_ind_dataframes(df):
-  group_by_control_probe = df.groupby(df['CONTROL_PROBE_TEMP'].astype(int))
+  group_by_control_probe = df.groupby(df['CONTROL_PROBE_TEMP'].astype(float).astype(int))
   return group_by_control_probe.agg([np.min, np.mean, np.max])
 
 def combined_df(frames):
