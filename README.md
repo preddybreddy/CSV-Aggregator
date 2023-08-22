@@ -9,14 +9,30 @@ The goal of the project is to give an overview of data points across various sou
 * Docker Desktop
 
 2. Installation process
-1) Start Docker Desktop
-2) Open the terminal
-3) To build the docker image run the following command 
-    * ```docker build -t <image_name:image_tag> https://farrarscientific@dev.azure.com/farrarscientific/Software/_git/CSV_Aggregator```
-4) To verify the successfull installation of the image, run ```docker images``` and verify the image is present
-5) To run the image
-    * ```docker run -d -p <client_port>:5000 <image_name:image_tag>```
+1) Docker Instructions
+    1) Start Docker Desktop
+    2) Open the terminal
+    3) To build the docker image run the following command 
+        * ```docker build -t <image_name:image_tag> https://farrarscientific@dev.azure.com/farrarscientific/Software/_git/CSV_Aggregator```
+    4) To verify the successfull installation of the image, run ```docker images``` and verify the image is present
+    5) To run the image
+        * ```docker run -d -p <client_port>:5000 <image_name:image_tag>```
 
+2) Local Instructions
+    1) Clone the git repository
+    2) Open Anaconda Prompt
+        - Recreate environment ```conda create --name <name> --file spec-list.txt```
+    3) Activate the conda environment
+        - ```conda activate <name>```
+    4) ```cd``` into the folder where you cloned the repo
+    5) Create python venv
+        - ```py -m venv env```
+    6) Activate the venv
+        - ```.\env\Scripts\activate```
+    7) Install dependencies
+        - ```pip install -r requirements.txt```
+    8) Start the server
+        - ```py app.py```
 2. Software dependencies
 1) Refer to requirements.txt
 
