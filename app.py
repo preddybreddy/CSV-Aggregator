@@ -18,6 +18,7 @@ def upload_multiple():
     if request.method == 'POST':
         filenames = []
         files = request.files.getlist('multiple_files')
+        delete_raw_datasets()
         for file in files:
             filename = secure_filename(file.filename)
             filenames.append(file.filename)
