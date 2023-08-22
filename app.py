@@ -7,9 +7,12 @@ import os
 
 app = Flask(__name__)
 app.config['ROOT_PATH'] = Path.cwd()
+# RAW_DATASETS - The raw .csv or .xlsx files from user input are stored here
 app.config['RAW_DATASETS'] = app.config['ROOT_PATH'] /'raw_datasets'
+# OUTPUT_DATASETS - The aggregated document from combining all the input files is stored here
 app.config['OUTPUT_DATASETS'] = app.config['ROOT_PATH'] / 'output_datasets'
 
+# This action allows the user to upload multiple files
 @app.route('/', methods=['POST', 'GET'])
 def upload_multiple():
     if request.method == 'POST':
@@ -20,10 +23,10 @@ def upload_multiple():
             filenames.append(file.filename)
             try:
                 file.save(str(app.config['RAW_DATASETS'] / Path(filename)))
+            # If any issue occurs during saving input files to the server then the following error is returned
             except FileNotFoundError:
-                return 'Upload folder does not exist on server'
-            except:
-                return 'Error encountered in uploading file'
+                return 'Error in uploading files to server'
+        # dictionary to hold query string represented in the form of file{n = index of file uploaded}=<name_of_file>
         d = {}
         for filename_i in range(len(filenames)):
             d['file'+ str(filename_i+1)] = filenames[filename_i]
@@ -34,7 +37,8 @@ def upload_multiple():
     else:
         return render_template('upload_multiple.html')
 
-
+# This action is responsible for aggregating the data
+# Makes use of multiple utility methods located in util_functions.py
 @app.route('/process-csv')
 def data_processing():
     fileCount = request.args.get('fileCount', 0)
@@ -51,16 +55,20 @@ def data_processing():
         df_for_single_temperature_list.append(util_functions.output_dataframe_for_single_temperature(group.stack(),orig_columns, name ))
 
     final_df = util_functions.output_final_df(df_for_single_temperature_list)
+    # The aggregated document always has the same name
     outputFileName = 'Aggregated Data' + '.xlsx'
     try:
         util_functions.output_file(outputFileName, final_df)
     except:
         return "Could not convert to excel"
+    
+    # The excel file is converted to binary and returned from the api with mime format application/csv
     return_data = io.BytesIO()
     output_file_path = str(app.config['OUTPUT_DATASETS'] / outputFileName)
     with open(output_file_path, 'rb') as f:
         return_data.write(f.read())
     return_data.seek(0)
+    # Once aggreagated doc is returned the input datasets and the outputted file are deleted from the server to free-up space
     os.remove(output_file_path)
     delete_raw_datasets()
     return send_file(return_data, mimetype='application/csv', as_attachment=True, download_name='Aggregated Data.xlsx')

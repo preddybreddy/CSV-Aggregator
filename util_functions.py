@@ -15,13 +15,16 @@ def load_and_clean_dataset(filename):
     df = pd.read_csv(filename, index_col=None)
   elif filename_path.suffix == '.xlsx':
     df = pd.read_excel(filename, index_col=None)
+  # Only keeps the non-null values in CONTROL_PROBE_TEMP
   df_null = df[df['CONTROL_PROBE_TEMP'].isnull()]
   if (len(df_null) > 0):
     df = df.loc[0:df_null.index[0]-1]
+  # Dropping useless columns Date, Time, Minutes since grouping is done by CONTROL_PROBE_TEMP
   columns_to_drop = ['Date','Time', 'Minutes']
   return drop_columns(df, columns_to_drop)
 
 def aggregated_ind_dataframes(df):
+  # Conversion to float and then int. Since some values are represented as str
   group_by_control_probe = df.groupby(df['CONTROL_PROBE_TEMP'].astype(float).astype(int))
   return group_by_control_probe.agg([np.min, np.mean, np.max])
 
@@ -76,7 +79,7 @@ def consolidate_min_mean_max_to_1D(np_arr, op):
 
 # @params -> stacked_df, columns, temperature
 # columns -> Columns of the original dataframe e.g 1ST_COMP_DISC_PRESS, 1ST_COMP_SUCT_PRESS ...
-# TO DO: Does the order of the columns matter? - The order of columns is important
+# TO DO: Does the order of the columns matter? - Yes, the order of columns is important
 # temperature -> the CONTROL PROBE TEMPERATURE the stacked_df was grouped by
 # 
 # @method ->
